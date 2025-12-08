@@ -5,6 +5,7 @@ from google.genai import types
 from google.adk.runners import Runner
 from google.adk.sessions.in_memory_session_service import InMemorySessionService
 from google.adk.agents.llm_agent import Agent
+from pydantic import BaseModel, Field
 
 # Attempt to load a local .env file (simple parser) so the script can be run
 # from this folder without requiring external dotenv packages.
@@ -51,13 +52,19 @@ _init_adk_from_env()
 
 # --- 1. Define Agent, App Name, and User Context ---
 
+class CountryCapital(BaseModel):
+    capital: str = Field(description="A country's capital.")
+    
 # Define the Agent. Since the query is general knowledge, we use a simple LLMAgent
 # without any specific tools.
 agent = Agent(
     model="gemini-2.5-flash",  # Use a suitable Gemini model
     name="CapitalFinderAgent",
     instruction="You are a helpful assistant that answers general knowledge questions concisely.",
-    tools=[]  # No tools needed for this query
+    tools=[],  # No tools needed for this query
+    disallow_transfer_to_parent=True,
+    disallow_transfer_to_peers=True,
+    output_schema=CountryCapital
 )
 
 # Define context variables
