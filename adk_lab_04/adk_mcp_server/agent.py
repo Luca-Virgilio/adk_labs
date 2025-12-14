@@ -3,12 +3,11 @@ from google.adk.agents import LlmAgent
 from google.adk.tools.mcp_tool.mcp_toolset import MCPToolset, \
                     StdioServerParameters, StdioConnectionParams
 
-# IMPORTANT: Replace this with the ABSOLUTE path to your adk_server.py script
-PATH_TO_YOUR_MCP_SERVER_SCRIPT = "/home/student_00_6ed94ccdd7a2/adk_mcp_tools/adk_mcp_server/adk_server.py"
+# IMPORTANT: Use the local adk_server.py in this package by default.
+PATH_TO_YOUR_MCP_SERVER_SCRIPT = os.path.join(os.path.dirname(__file__), "adk_server.py")
 
-if PATH_TO_YOUR_MCP_SERVER_SCRIPT == "None":
-    print("WARNING: PATH_TO_YOUR_MCP_SERVER_SCRIPT is not set. Please update it in agent.py.")
-    # Optionally, raise an error if the path is critical
+if not os.path.exists(PATH_TO_YOUR_MCP_SERVER_SCRIPT):
+    print(f"WARNING: PATH_TO_YOUR_MCP_SERVER_SCRIPT '{PATH_TO_YOUR_MCP_SERVER_SCRIPT}' does not exist. Please update the path if required.")
 
 root_agent = LlmAgent(
     model=os.getenv("MODEL"),
